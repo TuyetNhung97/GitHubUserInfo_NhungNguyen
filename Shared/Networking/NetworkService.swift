@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol NetworkServiceProtocol {
+protocol NetworkService {
     func request<T: Codable>(_ endpoint: Endpoint) async throws -> T
 }

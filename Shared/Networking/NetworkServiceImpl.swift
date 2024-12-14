@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NetworkManager: NetworkServiceProtocol {
+class NetworkServiceImpl: NetworkService {
 
     private let responseHandler: ResponseHandler
     private let retryPolicy: RetryPolicy

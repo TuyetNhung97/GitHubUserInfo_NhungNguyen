@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class UserListVC: UIViewController {
     
-    private let networkManager = NetworkManager()
-    private var users: [GitHubUser] = []
+    private var userVM: UserListVM!
+    private var cancellables = Set<AnyCancellable>()
+    
     private lazy var userListTbl: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -22,31 +24,8 @@ class UserListVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
-//        view.backgroundColor = .white
-//        title = "GitHub Users"
-//        
-        Task {
-            do {
-                // Fetch danh sách người dùng với async/await
-                users = try await networkManager.request(GitHubEndpoint.fetchUsers(perPage: 20, since: 0))
-                userListTbl.reloadData()
-            } catch {
-                handleError(error)
-            }
-        }
-//        
-//        let v = UserCardView()
-//        v.translatesAutoresizingMaskIntoConstraints = false
-//        v.configure(with: UserInfoViewModel(name: "Nhung",
-//                                            avatar: "https://avatars.githubusercontent.com/u/1?v=4",
-//                                            location: "Việt Nam",
-//                                            url: "https://github.com/mojombo"))
-//        view.addSubview(v)
-//        v.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-//        v.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-//        v.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        setupVM()
     }
     
     func setupView() {
@@ -60,6 +39,20 @@ class UserListVC: UIViewController {
             userListTbl.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
+    }
+    
+    func setupVM() {
+        self.userVM = UserListVMImpl(userService: UserSeviceIml(apiService: NetworkServiceImpl()),
+                                     coreDataHelper: CoreDataHelperImpl(container: .createUserEntityContainer()))
+        self.userVM.users
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.userListTbl.reloadData()
+            }
+            .store(in: &cancellables)
+        Task {
+            await self.userVM.loadUsersFromCoreData()
+        }
     }
     
     private func handleError(_ error: Error) {
@@ -82,22 +75,18 @@ class UserListVC: UIViewController {
 
 extension UserListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return userVM.users.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserListItemCell.reuseIdentifier, for: indexPath) as? UserListItemCell else { return UITableViewCell() }
-        let a = users[indexPath.row]
-        let b = UserInfoViewModel(name: a.nameLogin,
-                                  avatar: a.avatarUrl,
-                                  url: a.htmlUrl)
-        cell.configure(with: b)
+        cell.configure(with: userVM.users.value[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let a = users[indexPath.row]
-        print("name====\(a.nameLogin)")
+        let a = userVM.users.value[indexPath.row]
+        print("name====\(a.name)")
     }
     
     

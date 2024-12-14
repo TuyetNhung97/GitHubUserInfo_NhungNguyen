@@ -10,11 +10,13 @@
 		BA534C912D0D7C7600705ACA /* RetryPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C902D0D7C7600705ACA /* RetryPolicy.swift */; };
 		BA534C932D0D7D0D00705ACA /* GitHubEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C922D0D7D0D00705ACA /* GitHubEndpoint.swift */; };
 		BA534C952D0D7E9A00705ACA /* ResponseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C942D0D7E9A00705ACA /* ResponseHandler.swift */; };
-		BA534C972D0D7ECE00705ACA /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C962D0D7ECE00705ACA /* RequestBuilder.swift */; };
 		BA534C992D0D7F5D00705ACA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C982D0D7F5D00705ACA /* NetworkError.swift */; };
 		BA534C9B2D0D851200705ACA /* GitHubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9A2D0D851200705ACA /* GitHubUser.swift */; };
 		BA534C9D2D0D89DD00705ACA /* GitHubUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9C2D0D89DD00705ACA /* GitHubUserDetail.swift */; };
 		BA534C9F2D0DD33400705ACA /* UserListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9E2D0DD33400705ACA /* UserListItemCell.swift */; };
+		BA534CA12D0DD9A800705ACA /* UserListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA02D0DD9A800705ACA /* UserListVM.swift */; };
+		BA534CA42D0DE08D00705ACA /* UserSevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA32D0DE08D00705ACA /* UserSevice.swift */; };
+		BA534CA62D0DE45300705ACA /* UserEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA52D0DE45300705ACA /* UserEntity.swift */; };
 		BAC038A82D0B4E730033403D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038A72D0B4E730033403D /* AppDelegate.swift */; };
 		BAC038AA2D0B4E730033403D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038A92D0B4E730033403D /* SceneDelegate.swift */; };
 		BAC038AC2D0B4E730033403D /* UserListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038AB2D0B4E730033403D /* UserListVC.swift */; };
@@ -25,9 +27,9 @@
 		BAC038C52D0B4E940033403D /* UserListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038C12D0B4E940033403D /* UserListViewModelTests.swift */; };
 		BAC038CA2D0B4EE40033403D /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038C82D0B4EE40033403D /* AppCoordinator.swift */; };
 		BAC038CB2D0B4EE40033403D /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038C92D0B4EE40033403D /* DIContainer.swift */; };
-		BAC038DC2D0B50130033403D /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038DB2D0B50130033403D /* NetworkManager.swift */; };
-		BAC038DE2D0B50210033403D /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038DD2D0B50210033403D /* NetworkServiceProtocol.swift */; };
-		BAC038E02D0B50360033403D /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038DF2D0B50360033403D /* CoreDataHelper.swift */; };
+		BAC038DC2D0B50130033403D /* NetworkServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038DB2D0B50130033403D /* NetworkServiceImpl.swift */; };
+		BAC038DE2D0B50210033403D /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038DD2D0B50210033403D /* NetworkService.swift */; };
+		BAC038E02D0B50360033403D /* CoreDataHelperImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038DF2D0B50360033403D /* CoreDataHelperImpl.swift */; };
 		BAC038E22D0B50430033403D /* CoreDataHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038E12D0B50430033403D /* CoreDataHelperProtocol.swift */; };
 		BAC038E62D0B50660033403D /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038E52D0B50660033403D /* UserCardView.swift */; };
 		D0AD727AA1BEF40F2F9E947E /* Pods_GitHubUserInfo_NhungNguyen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080ED8692B1F798269B6823F /* Pods_GitHubUserInfo_NhungNguyen.framework */; };
@@ -40,11 +42,13 @@
 		BA534C902D0D7C7600705ACA /* RetryPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryPolicy.swift; sourceTree = "<group>"; };
 		BA534C922D0D7D0D00705ACA /* GitHubEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEndpoint.swift; sourceTree = "<group>"; };
 		BA534C942D0D7E9A00705ACA /* ResponseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseHandler.swift; sourceTree = "<group>"; };
-		BA534C962D0D7ECE00705ACA /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		BA534C982D0D7F5D00705ACA /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		BA534C9A2D0D851200705ACA /* GitHubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubUser.swift; sourceTree = "<group>"; };
 		BA534C9C2D0D89DD00705ACA /* GitHubUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubUserDetail.swift; sourceTree = "<group>"; };
 		BA534C9E2D0DD33400705ACA /* UserListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListItemCell.swift; sourceTree = "<group>"; };
+		BA534CA02D0DD9A800705ACA /* UserListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListVM.swift; sourceTree = "<group>"; };
+		BA534CA32D0DE08D00705ACA /* UserSevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSevice.swift; sourceTree = "<group>"; };
+		BA534CA52D0DE45300705ACA /* UserEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEntity.swift; sourceTree = "<group>"; };
 		BAC038A42D0B4E730033403D /* GitHubUserInfo_NhungNguyen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubUserInfo_NhungNguyen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAC038A72D0B4E730033403D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAC038A92D0B4E730033403D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -57,9 +61,9 @@
 		BAC038C12D0B4E940033403D /* UserListViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListViewModelTests.swift; sourceTree = "<group>"; };
 		BAC038C82D0B4EE40033403D /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		BAC038C92D0B4EE40033403D /* DIContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
-		BAC038DB2D0B50130033403D /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		BAC038DD2D0B50210033403D /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
-		BAC038DF2D0B50360033403D /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		BAC038DB2D0B50130033403D /* NetworkServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceImpl.swift; sourceTree = "<group>"; };
+		BAC038DD2D0B50210033403D /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		BAC038DF2D0B50360033403D /* CoreDataHelperImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelperImpl.swift; sourceTree = "<group>"; };
 		BAC038E12D0B50430033403D /* CoreDataHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelperProtocol.swift; sourceTree = "<group>"; };
 		BAC038E52D0B50660033403D /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
 		BAEA6E0D2D0B6990007F0357 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -92,6 +96,14 @@
 				080ED8692B1F798269B6823F /* Pods_GitHubUserInfo_NhungNguyen.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BA534CA22D0DE05B00705ACA /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				BA534CA32D0DE08D00705ACA /* UserSevice.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		BAC0389B2D0B4E730033403D = {
@@ -167,6 +179,7 @@
 		BAC038CC2D0B4EEE0033403D /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				BA534CA22D0DE05B00705ACA /* Service */,
 				BAC038CD2D0B4EEE0033403D /* UserDetails */,
 				BAC038D12D0B4EEE0033403D /* UserList */,
 			);
@@ -218,6 +231,7 @@
 		BAC038D22D0B4EEE0033403D /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				BA534CA02D0DD9A800705ACA /* UserListVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -252,8 +266,9 @@
 		BAC038D82D0B4F120033403D /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				BAC038DF2D0B50360033403D /* CoreDataHelper.swift */,
+				BAC038DF2D0B50360033403D /* CoreDataHelperImpl.swift */,
 				BAC038E12D0B50430033403D /* CoreDataHelperProtocol.swift */,
+				BA534CA52D0DE45300705ACA /* UserEntity.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -261,12 +276,11 @@
 		BAC038D92D0B4F120033403D /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				BAC038DB2D0B50130033403D /* NetworkManager.swift */,
-				BAC038DD2D0B50210033403D /* NetworkServiceProtocol.swift */,
+				BAC038DB2D0B50130033403D /* NetworkServiceImpl.swift */,
+				BAC038DD2D0B50210033403D /* NetworkService.swift */,
 				BA534C902D0D7C7600705ACA /* RetryPolicy.swift */,
 				BA534C922D0D7D0D00705ACA /* GitHubEndpoint.swift */,
 				BA534C942D0D7E9A00705ACA /* ResponseHandler.swift */,
-				BA534C962D0D7ECE00705ACA /* RequestBuilder.swift */,
 				BA534C982D0D7F5D00705ACA /* NetworkError.swift */,
 			);
 			path = Networking;
@@ -394,26 +408,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA534C9B2D0D851200705ACA /* GitHubUser.swift in Sources */,
-				BAC038DE2D0B50210033403D /* NetworkServiceProtocol.swift in Sources */,
+				BAC038DE2D0B50210033403D /* NetworkService.swift in Sources */,
 				BAC038C42D0B4E940033403D /* UserDetailViewModelTests.swift in Sources */,
 				BA534C912D0D7C7600705ACA /* RetryPolicy.swift in Sources */,
 				BA534C932D0D7D0D00705ACA /* GitHubEndpoint.swift in Sources */,
 				BAC038C22D0B4E940033403D /* MockCoreDataHelper.swift in Sources */,
 				BAC038C32D0B4E940033403D /* MockAPIService.swift in Sources */,
-				BAC038DC2D0B50130033403D /* NetworkManager.swift in Sources */,
+				BA534CA62D0DE45300705ACA /* UserEntity.swift in Sources */,
+				BAC038DC2D0B50130033403D /* NetworkServiceImpl.swift in Sources */,
 				BAC038C52D0B4E940033403D /* UserListViewModelTests.swift in Sources */,
+				BA534CA42D0DE08D00705ACA /* UserSevice.swift in Sources */,
 				BAC038CA2D0B4EE40033403D /* AppCoordinator.swift in Sources */,
 				BA534C992D0D7F5D00705ACA /* NetworkError.swift in Sources */,
 				BA534C9F2D0DD33400705ACA /* UserListItemCell.swift in Sources */,
 				BAC038E22D0B50430033403D /* CoreDataHelperProtocol.swift in Sources */,
 				BAC038E62D0B50660033403D /* UserCardView.swift in Sources */,
+				BA534CA12D0DD9A800705ACA /* UserListVM.swift in Sources */,
 				BA534C952D0D7E9A00705ACA /* ResponseHandler.swift in Sources */,
-				BAC038E02D0B50360033403D /* CoreDataHelper.swift in Sources */,
+				BAC038E02D0B50360033403D /* CoreDataHelperImpl.swift in Sources */,
 				BAC038AC2D0B4E730033403D /* UserListVC.swift in Sources */,
 				BAC038A82D0B4E730033403D /* AppDelegate.swift in Sources */,
 				BAC038CB2D0B4EE40033403D /* DIContainer.swift in Sources */,
 				BA534C9D2D0D89DD00705ACA /* GitHubUserDetail.swift in Sources */,
-				BA534C972D0D7ECE00705ACA /* RequestBuilder.swift in Sources */,
 				BAC038AA2D0B4E730033403D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
