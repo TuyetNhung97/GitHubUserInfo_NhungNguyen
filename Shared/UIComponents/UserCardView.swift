@@ -98,6 +98,7 @@ class UserCardView: UIView {
         return label
     }()
     
+    // MARK: - Properties
     private var userInfo: UserInfoViewModel?
     
     // MARK: - Init
@@ -214,7 +215,7 @@ class UserCardView: UIView {
 struct UserInfoViewModel {
     var name: String
     var avatar: String
-    var location: String
+    var location: String = ""
     var url: String
 }
 

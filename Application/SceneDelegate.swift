@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.backgroundColor = UIColor.white
         
-        let viewController = ViewController()
+        let viewController = UserListVC()
 
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.navigationBar.barTintColor = UIColor.white  // Màu nền cho navigation bar

@@ -14,9 +14,10 @@
 		BA534C992D0D7F5D00705ACA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C982D0D7F5D00705ACA /* NetworkError.swift */; };
 		BA534C9B2D0D851200705ACA /* GitHubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9A2D0D851200705ACA /* GitHubUser.swift */; };
 		BA534C9D2D0D89DD00705ACA /* GitHubUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9C2D0D89DD00705ACA /* GitHubUserDetail.swift */; };
+		BA534C9F2D0DD33400705ACA /* UserListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9E2D0DD33400705ACA /* UserListItemCell.swift */; };
 		BAC038A82D0B4E730033403D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038A72D0B4E730033403D /* AppDelegate.swift */; };
 		BAC038AA2D0B4E730033403D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038A92D0B4E730033403D /* SceneDelegate.swift */; };
-		BAC038AC2D0B4E730033403D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038AB2D0B4E730033403D /* ViewController.swift */; };
+		BAC038AC2D0B4E730033403D /* UserListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038AB2D0B4E730033403D /* UserListVC.swift */; };
 		BAC038B12D0B4E730033403D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAC038B02D0B4E730033403D /* Assets.xcassets */; };
 		BAC038C22D0B4E940033403D /* MockCoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038BD2D0B4E940033403D /* MockCoreDataHelper.swift */; };
 		BAC038C32D0B4E940033403D /* MockAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038BE2D0B4E940033403D /* MockAPIService.swift */; };
@@ -43,10 +44,11 @@
 		BA534C982D0D7F5D00705ACA /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		BA534C9A2D0D851200705ACA /* GitHubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubUser.swift; sourceTree = "<group>"; };
 		BA534C9C2D0D89DD00705ACA /* GitHubUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubUserDetail.swift; sourceTree = "<group>"; };
+		BA534C9E2D0DD33400705ACA /* UserListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListItemCell.swift; sourceTree = "<group>"; };
 		BAC038A42D0B4E730033403D /* GitHubUserInfo_NhungNguyen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubUserInfo_NhungNguyen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAC038A72D0B4E730033403D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAC038A92D0B4E730033403D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		BAC038AB2D0B4E730033403D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ../../../GitHubUserInfo_NhungNguyen/ViewController.swift; sourceTree = "<group>"; };
+		BAC038AB2D0B4E730033403D /* UserListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserListVC.swift; path = ../../../GitHubUserInfo_NhungNguyen/UserListVC.swift; sourceTree = "<group>"; };
 		BAC038B02D0B4E730033403D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BAC038B52D0B4E730033403D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BAC038BD2D0B4E940033403D /* MockCoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCoreDataHelper.swift; sourceTree = "<group>"; };
@@ -231,7 +233,8 @@
 		BAC038D42D0B4EEE0033403D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				BAC038AB2D0B4E730033403D /* ViewController.swift */,
+				BAC038AB2D0B4E730033403D /* UserListVC.swift */,
+				BA534C9E2D0DD33400705ACA /* UserListItemCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -401,11 +404,12 @@
 				BAC038C52D0B4E940033403D /* UserListViewModelTests.swift in Sources */,
 				BAC038CA2D0B4EE40033403D /* AppCoordinator.swift in Sources */,
 				BA534C992D0D7F5D00705ACA /* NetworkError.swift in Sources */,
+				BA534C9F2D0DD33400705ACA /* UserListItemCell.swift in Sources */,
 				BAC038E22D0B50430033403D /* CoreDataHelperProtocol.swift in Sources */,
 				BAC038E62D0B50660033403D /* UserCardView.swift in Sources */,
 				BA534C952D0D7E9A00705ACA /* ResponseHandler.swift in Sources */,
 				BAC038E02D0B50360033403D /* CoreDataHelper.swift in Sources */,
-				BAC038AC2D0B4E730033403D /* ViewController.swift in Sources */,
+				BAC038AC2D0B4E730033403D /* UserListVC.swift in Sources */,
 				BAC038A82D0B4E730033403D /* AppDelegate.swift in Sources */,
 				BAC038CB2D0B4EE40033403D /* DIContainer.swift in Sources */,
 				BA534C9D2D0D89DD00705ACA /* GitHubUserDetail.swift in Sources */,
