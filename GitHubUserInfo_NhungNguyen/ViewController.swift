@@ -25,6 +25,17 @@ class ViewController: UIViewController {
                 handleError(error)
             }
         }
+        
+        let v = UserCardView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.configure(with: UserInfoViewModel(name: "Nhung",
+                                            avatar: "https://avatars.githubusercontent.com/u/1?v=4",
+                                            location: "Việt Nam",
+                                            url: "https://github.com/mojombo"))
+        view.addSubview(v)
+        v.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        v.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        v.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
     private func handleError(_ error: Error) {
