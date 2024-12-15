@@ -6,8 +6,21 @@
 //
 
 import UIKit
+import Combine
 
 class UserDetailVC: UIViewController {
+    
+    private var userDetailVM: UserDetailVM!
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(userDetailVM: UserDetailVM) {
+        super.init(nibName: nil, bundle: nil)
+        self.userDetailVM = userDetailVM
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
     
     private lazy var userDetailScrollView: UIScrollView = {
        let scrollView = UIScrollView()
@@ -26,9 +39,6 @@ class UserDetailVC: UIViewController {
     private lazy var userDetailCard: UserCardView = {
        let view = UserCardView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(with: UserInfoViewModel(name: "Nhung",
-                                               avatar: "https://avatars.githubusercontent.com/u/101?v=4",
-                                               location: "San Francisco"))
         return view
     }()
     
@@ -44,7 +54,6 @@ class UserDetailVC: UIViewController {
        let view = FollowView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.configure(title: "Follower", icon: "ic_follower")
-        view.setFollowNumber(number: "100+")
         return view
     }()
     
@@ -52,7 +61,6 @@ class UserDetailVC: UIViewController {
        let view = FollowView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.configure(title: "Following", icon: "ic_following")
-        view.setFollowNumber(number: "10+")
         return view
     }()
     
@@ -68,7 +76,6 @@ class UserDetailVC: UIViewController {
         let label = UILabel()
          label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14)
-        label.text = "Blog detail kajsdkjagdjkagdkjga"
         label.textColor = .gray
          return label
     }()
@@ -76,6 +83,7 @@ class UserDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        setupVM()
     }
     
     func setupView() {
@@ -120,6 +128,20 @@ class UserDetailVC: UIViewController {
         ])
     }
     
+    func setupNavigationBar() {
+        title = "User details"
+        let icBack = UIImage(named: "ic_back")
+        
+        let button = UIButton(type: .custom)
+        button.setImage(icBack, for: .normal)
+        button.frame = CGRect(x: 16.0, y: 0.0, width: 20, height: 20)
+        button.addTarget(self, action: #selector(handleActionBack), for: .touchUpInside)
+        
+        let barButtonItem = UIBarButtonItem(customView: button)
+        
+        self.navigationItem.leftBarButtonItem = barButtonItem
+    }
+    
     func addSubView() {
         view.backgroundColor = .white
         view.addSubview(userDetailScrollView)
@@ -136,25 +158,29 @@ class UserDetailVC: UIViewController {
         scrollContainerView.addSubview(blogDetailLabel)
     }
     
-    func setupNavigationBar() {
-        title = "User details"
-        let icBack = UIImage(named: "ic_back")
-        
-        let button = UIButton(type: .custom)
-        button.setImage(icBack, for: .normal)
-        button.frame = CGRect(x: 16.0, y: 0.0, width: 20, height: 20)
-        button.addTarget(self, action: #selector(handleActionBack), for: .touchUpInside)
-        
-        let barButtonItem = UIBarButtonItem(customView: button)
-        
-        self.navigationItem.leftBarButtonItem = barButtonItem
-    }
-    
     func createEmptyView() -> UIView {
         let spacer = UIView()
         spacer.translatesAutoresizingMaskIntoConstraints = false
         spacer.widthAnchor.constraint(equalToConstant: 1).isActive = true
         return spacer
+    }
+    
+    func setupVM() {
+        self.userDetailVM.userDetail
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] dataUserdetail in
+                guard let self = self, let dataUserdetail else { return }
+                self.configure(with: dataUserdetail)
+            }
+            .store(in: &cancellables)
+        self.userDetailVM.fetchUserDetail()
+    }
+    
+    func configure(with user: UserDetailViewModel) {
+        userDetailCard.configure(with: user.userGeneralInfo)
+        followerView.setFollowNumber(numberString: user.followerNumber.getFormattedString())
+        followingView.setFollowNumber(numberString: user.followingNumber.getFormattedString())
+        blogDetailLabel.text = user.blogUrl
     }
     
     @objc func handleActionBack() {
@@ -164,4 +190,11 @@ class UserDetailVC: UIViewController {
 
 extension UserDetailVC: UIScrollViewDelegate {
     
+}
+
+struct UserDetailViewModel {
+    var userGeneralInfo: UserInfoViewModel
+    var followerNumber: FollowType
+    var followingNumber: FollowType
+    var blogUrl: String
 }

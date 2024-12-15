@@ -38,7 +38,8 @@ class UserListVMImpl: UserListVM {
         guard !isLoading else { return }
         
         isLoading = true
-        Task {
+        Task { [weak self] in
+            guard let self = self else { return }
             do {
                 // Fetch new users from the service
                 let newUsers = try await userService.fetchUsers(perPage: perPage, since: since)
@@ -76,7 +77,8 @@ class UserListVMImpl: UserListVM {
     }
     
     func refreshUserList() {
-        Task {
+        Task { [weak self] in
+            guard let self = self else { return }
             do {
                 // Delete all users in Core Data
                 try await coreDataHelper.deleteAllUserList()
@@ -111,7 +113,7 @@ class UserListVMImpl: UserListVM {
             
             // If no cached users, fetch from the service
             if cachedUsers.isEmpty {
-                 fetchUserList()
+                fetchUserList()
             }
         } catch {
             // Handle errors if any

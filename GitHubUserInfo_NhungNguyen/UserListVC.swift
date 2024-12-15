@@ -52,7 +52,7 @@ class UserListVC: UIViewController {
     }
     
     func setupNavigationBar() {
-        title = "Github Users"        
+        title = "Github Users"
     }
     
     func setupVM() {
@@ -68,6 +68,13 @@ class UserListVC: UIViewController {
         Task {
             await self.userVM.loadUsersFromCoreData()
         }
+    }
+    
+    func pushToUserDetail(loginName: String) {
+        let userDetailVM = UserDetailVMImpl(userService: UserSeviceIml(apiService: NetworkServiceImpl()),
+                                            loginUsername: loginName)
+        let vc = UserDetailVC(userDetailVM: userDetailVM)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func pullToRefresh() {
@@ -87,24 +94,24 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let a = userVM.users.value[indexPath.row]
-        let vc = UserDetailVC()
-        self.navigationController?.pushViewController(vc, animated: true)
+        let dataUser = userVM.users.value[indexPath.row]
+        self.pushToUserDetail(loginName: dataUser.name)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            let offsetY = scrollView.contentOffset.y
-            let contentHeight = scrollView.contentSize.height
-            let frameHeight = scrollView.frame.size.height
-            
-            // Check if we are near the bottom of the table view
-            if offsetY > contentHeight - frameHeight - 100 {
-                if !userVM.users.value.isEmpty {
-                    print("load more call")
-                    userVM.fetchUserList()
-                }
-                
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let frameHeight = scrollView.frame.size.height
+        
+        // Check if we are near the bottom of the table view
+        if offsetY > contentHeight - frameHeight - 100 {
+            if !userVM.users.value.isEmpty {
+                print("load more call")
+                userVM.fetchUserList()
             }
+            
         }
+    }
+    
 }
 

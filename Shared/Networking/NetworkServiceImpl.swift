@@ -44,11 +44,9 @@ class NetworkServiceImpl: NetworkService {
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
                 throw NetworkError.serverError("Invalid status code")
             }
-
             let decodedResponse = try JSONDecoder().decode(T.self, from: data)
             return decodedResponse
         } catch {
-            // Xử lý lỗi từ URLSession hoặc parsing
             throw handleError(error)
         }
     }

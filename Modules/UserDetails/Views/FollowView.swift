@@ -104,7 +104,7 @@ class FollowView: UIView {
         iconImageView.image = UIImage(named: icon)
     }
     
-    func setFollowNumber(number: String) {
-        numberLabel.text = number
+    func setFollowNumber(numberString: String) {
+        numberLabel.text = numberString
     }
 }
