@@ -87,7 +87,7 @@ class UserListVMImpl: UserListVM {
                 self.since = 0
                 
                 // Fetch the new user list
-                await fetchUserList()
+                fetchUserList()
             } catch {
                 DispatchQueue.main.async {
                     self.handleError(error)
@@ -105,11 +105,11 @@ class UserListVMImpl: UserListVM {
             let viewModels = cachedUsers.map { UserInfoViewModel(name: $0.nameLogin,
                                                                  avatar: $0.avatarUrl,
                                                                  url: $0.htmlUrl) }
-            
+            self.users.value = viewModels
             // Update UI on the main thread
-            DispatchQueue.main.async {
-                self.users.value = viewModels
-            }
+//            DispatchQueue.main.async {
+//                
+//            }
             
             // If no cached users, fetch from the service
             if cachedUsers.isEmpty {

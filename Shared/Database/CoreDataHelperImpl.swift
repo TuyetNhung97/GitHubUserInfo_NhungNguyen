@@ -72,27 +72,6 @@ class CoreDataHelperImpl: CoreDataHelper {
             print("Failed to save users: \(error)")
         }
     }
-    // Fetch Single User by ID
-    func fetchUser(by id: Int) async throws -> GitHubUser? {
-        let context = persistentContainer.viewContext
-        let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-
-        do {
-            if let userEntity = try context.fetch(fetchRequest).first {
-                return GitHubUser(
-                    id: Int(userEntity.id),
-                    nameLogin: userEntity.nameLogin ?? "",
-                    avatarUrl: userEntity.avatarUrl ?? "",
-                    htmlUrl: userEntity.htmlUrl ?? ""
-                )
-            }
-        } catch {
-            print("Failed to fetch user by ID: \(error)")
-        }
-        return nil
-
-    }
     
     func deleteAllUserList() async throws {
         

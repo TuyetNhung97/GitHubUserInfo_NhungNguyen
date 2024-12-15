@@ -8,6 +8,7 @@
 import Foundation
 
 struct GitHubUserDetail: Codable {
+    
     let id: Int
     let nameLogin: String
     let avatarUrl: String
@@ -15,7 +16,17 @@ struct GitHubUserDetail: Codable {
     let followerNumber: Int
     let followingNumber: Int
     let blogUrl: String
-    // Mapping giữa tên khóa JSON và tên thuộc tính trong struct
+    
+    internal init(id: Int, nameLogin: String, avatarUrl: String, location: String, followerNumber: Int, followingNumber: Int, blogUrl: String) {
+        self.id = id
+        self.nameLogin = nameLogin
+        self.avatarUrl = avatarUrl
+        self.location = location
+        self.followerNumber = followerNumber
+        self.followingNumber = followingNumber
+        self.blogUrl = blogUrl
+    }
+    
     enum CodingKeys: String, CodingKey {
         case id
         case nameLogin = "login"
