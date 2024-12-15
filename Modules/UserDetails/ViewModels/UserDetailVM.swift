@@ -41,9 +41,7 @@ class UserDetailVMImpl: UserDetailVM {
     func fetchUserDetail() {
         Task { [weak self] in
             guard let self = self else { return }
-            print("userDetailInfo staet")
             let userDetailInfo: GitHubUserDetail = try await userService.fetchUserDetail(loginUsername: self.loginUsername)
-            print("userDetailInfo \(userDetailInfo)")
             userDetail.value = UserDetailViewModel(userGeneralInfo: UserInfoViewModel(name: userDetailInfo.nameLogin,
                                                                                       avatar: userDetailInfo.avatarUrl,
                                                                                       location: userDetailInfo.location),

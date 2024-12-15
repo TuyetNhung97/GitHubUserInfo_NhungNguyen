@@ -49,6 +49,7 @@ final class UserListVMTests: XCTestCase {
         // Assert
         XCTAssertEqual(sut.users.value.count, users.count)
         XCTAssertEqual(sut.users.value.first?.name, users.first?.nameLogin)
+        XCTAssertEqual(sut.users.value.last?.name, users.last?.nameLogin)
     }
     
     func testFetchUserList_Error() async {

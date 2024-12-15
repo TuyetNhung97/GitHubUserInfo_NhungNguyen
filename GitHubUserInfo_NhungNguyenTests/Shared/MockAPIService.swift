@@ -12,6 +12,7 @@ class MockAPIService: UserService {
     
     var shouldReturnError = false
     var mockUsers: [GitHubUser] = []
+    var mockUserDetail: GitHubUserDetail?
     
     func fetchUsers(perPage: Int, since: Int) async throws -> [GitHubUser] {
         if shouldReturnError {
@@ -21,13 +22,17 @@ class MockAPIService: UserService {
     }
     
     func fetchUserDetail(loginUsername: String) async throws -> GitHubUserDetail {
-        return GitHubUserDetail(id: 0,
-                                nameLogin: "",
-                                avatarUrl: "",
-                                location: "",
-                                followerNumber: 0,
-                                followingNumber: 0,
-                                blogUrl: "")
+        if shouldReturnError {
+            throw NetworkError.serverError("Mock error")
+        }
+        return mockUserDetail ?? GitHubUserDetail(
+            nameLogin: "",
+            avatarUrl: "",
+            location: "",
+            followerNumber: 0,
+            followingNumber: 0,
+            blogUrl: "")
+        
     }
     
 }
