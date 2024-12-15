@@ -15,6 +15,7 @@ struct GitHubUserDetail: Codable {
     let location: String
     let followers: Int
     let following: Int
+    let blogUrl: String
     // Mapping giữa tên khóa JSON và tên thuộc tính trong struct
     enum CodingKeys: String, CodingKey {
         case id
@@ -24,5 +25,6 @@ struct GitHubUserDetail: Codable {
         case location
         case followers
         case following
+        case blogUrl = "blog"
     }
 }

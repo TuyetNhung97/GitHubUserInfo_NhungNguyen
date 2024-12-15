@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol UserSevice {
+protocol UserService {
     func fetchUsers(perPage: Int, since: Int) async throws -> [GitHubUser]
     func fetchUserDetail(loginUsername: String) async throws -> GitHubUserDetail
 }
 
-class UserSeviceIml: UserSevice {
+class UserSeviceIml: UserService {
     private let apiService: NetworkService
     
     init(apiService: NetworkService) {

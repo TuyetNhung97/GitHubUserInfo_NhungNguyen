@@ -15,8 +15,10 @@
 		BA534C9D2D0D89DD00705ACA /* GitHubUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9C2D0D89DD00705ACA /* GitHubUserDetail.swift */; };
 		BA534C9F2D0DD33400705ACA /* UserListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534C9E2D0DD33400705ACA /* UserListItemCell.swift */; };
 		BA534CA12D0DD9A800705ACA /* UserListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA02D0DD9A800705ACA /* UserListVM.swift */; };
-		BA534CA42D0DE08D00705ACA /* UserSevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA32D0DE08D00705ACA /* UserSevice.swift */; };
+		BA534CA42D0DE08D00705ACA /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA32D0DE08D00705ACA /* UserService.swift */; };
 		BA534CA62D0DE45300705ACA /* UserEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA52D0DE45300705ACA /* UserEntity.swift */; };
+		BA534CA82D0E904500705ACA /* UserDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA72D0E904500705ACA /* UserDetailVC.swift */; };
+		BA534CAA2D0E962700705ACA /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA534CA92D0E962700705ACA /* FollowView.swift */; };
 		BAC038A82D0B4E730033403D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038A72D0B4E730033403D /* AppDelegate.swift */; };
 		BAC038AA2D0B4E730033403D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038A92D0B4E730033403D /* SceneDelegate.swift */; };
 		BAC038AC2D0B4E730033403D /* UserListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC038AB2D0B4E730033403D /* UserListVC.swift */; };
@@ -47,8 +49,10 @@
 		BA534C9C2D0D89DD00705ACA /* GitHubUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubUserDetail.swift; sourceTree = "<group>"; };
 		BA534C9E2D0DD33400705ACA /* UserListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListItemCell.swift; sourceTree = "<group>"; };
 		BA534CA02D0DD9A800705ACA /* UserListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListVM.swift; sourceTree = "<group>"; };
-		BA534CA32D0DE08D00705ACA /* UserSevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSevice.swift; sourceTree = "<group>"; };
+		BA534CA32D0DE08D00705ACA /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		BA534CA52D0DE45300705ACA /* UserEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEntity.swift; sourceTree = "<group>"; };
+		BA534CA72D0E904500705ACA /* UserDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailVC.swift; sourceTree = "<group>"; };
+		BA534CA92D0E962700705ACA /* FollowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowView.swift; sourceTree = "<group>"; };
 		BAC038A42D0B4E730033403D /* GitHubUserInfo_NhungNguyen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubUserInfo_NhungNguyen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAC038A72D0B4E730033403D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAC038A92D0B4E730033403D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -101,7 +105,7 @@
 		BA534CA22D0DE05B00705ACA /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				BA534CA32D0DE08D00705ACA /* UserSevice.swift */,
+				BA534CA32D0DE08D00705ACA /* UserService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -214,6 +218,8 @@
 		BAC038D02D0B4EEE0033403D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				BA534CA72D0E904500705ACA /* UserDetailVC.swift */,
+				BA534CA92D0E962700705ACA /* FollowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -417,10 +423,12 @@
 				BA534CA62D0DE45300705ACA /* UserEntity.swift in Sources */,
 				BAC038DC2D0B50130033403D /* NetworkServiceImpl.swift in Sources */,
 				BAC038C52D0B4E940033403D /* UserListViewModelTests.swift in Sources */,
-				BA534CA42D0DE08D00705ACA /* UserSevice.swift in Sources */,
+				BA534CA42D0DE08D00705ACA /* UserService.swift in Sources */,
 				BAC038CA2D0B4EE40033403D /* AppCoordinator.swift in Sources */,
 				BA534C992D0D7F5D00705ACA /* NetworkError.swift in Sources */,
 				BA534C9F2D0DD33400705ACA /* UserListItemCell.swift in Sources */,
+				BA534CA82D0E904500705ACA /* UserDetailVC.swift in Sources */,
+				BA534CAA2D0E962700705ACA /* FollowView.swift in Sources */,
 				BAC038E22D0B50430033403D /* CoreDataHelperProtocol.swift in Sources */,
 				BAC038E62D0B50660033403D /* UserCardView.swift in Sources */,
 				BA534CA12D0DD9A800705ACA /* UserListVM.swift in Sources */,
@@ -572,6 +580,8 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 15;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -601,6 +611,8 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 15;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

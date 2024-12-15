@@ -11,4 +11,5 @@ protocol CoreDataHelper {
     func fetchUserList() async throws -> [GitHubUser]
     func storeUserList(_ users: [GitHubUser]) async throws
     func fetchUser(by id: Int) async throws -> GitHubUser?
+    func deleteAllUserList() async throws
 }

@@ -9,12 +9,13 @@ import Foundation
 import CoreData
 
 class CoreDataHelperImpl: CoreDataHelper {
-    private let persistentContainer: NSPersistentContainer
 
+    private let persistentContainer: NSPersistentContainer
+    
     init(container: NSPersistentContainer) {
         self.persistentContainer = container
     }
-
+    
     // Default Persistent Container
     static var defaultContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "GitHubUsersModel")
@@ -25,14 +26,17 @@ class CoreDataHelperImpl: CoreDataHelper {
         }
         return container
     }()
-
+    
     // Fetch User List
     func fetchUserList() async throws -> [GitHubUser] {
         let context = persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
 
+        
         do {
-            let results = try await context.fetch(fetchRequest)
+            let results = try context.fetch(fetchRequest)
             return results.map { userEntity in
                 GitHubUser(
                     id: Int(userEntity.id),
@@ -46,7 +50,7 @@ class CoreDataHelperImpl: CoreDataHelper {
             return []
         }
     }
-
+    
     // Store User List
     func storeUserList(_ users: [GitHubUser]) async throws {
         let context = persistentContainer.viewContext
@@ -60,19 +64,22 @@ class CoreDataHelperImpl: CoreDataHelper {
         }
 
         do {
-            try await context.save()
+            try context.performAndWait {
+                try context.save()
+            }
+           
         } catch {
             print("Failed to save users: \(error)")
         }
     }
-// Fetch Single User by ID
+    // Fetch Single User by ID
     func fetchUser(by id: Int) async throws -> GitHubUser? {
         let context = persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %d", id)
 
         do {
-            if let userEntity = try await context.fetch(fetchRequest).first {
+            if let userEntity = try context.fetch(fetchRequest).first {
                 return GitHubUser(
                     id: Int(userEntity.id),
                     nameLogin: userEntity.nameLogin ?? "",
@@ -84,5 +91,31 @@ class CoreDataHelperImpl: CoreDataHelper {
             print("Failed to fetch user by ID: \(error)")
         }
         return nil
+
     }
+    
+    func deleteAllUserList() async throws {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            let context = persistentContainer.viewContext
+                context.performAndWait {
+                    do {
+                        // Create a fetch request to delete all objects in the entity
+                        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = UserEntity.fetchRequest()
+                        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                        
+                        // Perform the batch delete request
+                        try context.execute(deleteRequest)
+                        
+                        // Optionally save the context (if needed after deletion)
+                        try context.save()
+                        
+                        continuation.resume()  // Success, resume continuation
+                    } catch {
+                        continuation.resume(throwing: error)  // Handle any error and resume with the error
+                    }
+                }
+            }
+    }
+    
 }

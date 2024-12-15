@@ -14,13 +14,12 @@ class UserCardView: UIView {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 24
-        view.clipsToBounds = true
+        view.layer.cornerRadius = 16
         view.backgroundColor = .white
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.1
+        view.layer.shadowColor = UIColor.gray.cgColor
+        view.layer.shadowOpacity = 0.5
         view.layer.shadowRadius = 5
-        view.layer.shadowOffset = CGSize(width: 5, height: 5)
+        view.layer.shadowOffset = CGSize(width: 0, height: 5)
         return view
     }()
     
@@ -39,7 +38,7 @@ class UserCardView: UIView {
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.layer.cornerRadius = 16
         imgView.clipsToBounds = true
-        imgView.backgroundColor = .lightGray.withAlphaComponent(0.5)
+        imgView.backgroundColor = .lightGray.withAlphaComponent(0.2)
         return imgView
     }()
     
@@ -95,6 +94,7 @@ class UserCardView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14)
+        label.textColor = .gray
         return label
     }()
     
@@ -130,9 +130,9 @@ class UserCardView: UIView {
         NSLayoutConstraint.activate([
             // Constraints containerView
             containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             
             // Constraints avatarBackgroundView
             avatarBackgroundView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
@@ -216,33 +216,7 @@ struct UserInfoViewModel {
     var name: String
     var avatar: String
     var location: String = ""
-    var url: String
+    var url: String = ""
 }
 
-struct UserCardViewPreview: UIViewRepresentable {
-    let user: UserInfoViewModel
-    
-    // This method creates and returns your UserCardView
-    func makeUIView(context: Context) -> UserCardView {
-        let userCardView = UserCardView()
-        userCardView.configure(with: user)
-        return userCardView
-    }
-    
-    func updateUIView(_ uiView: UserCardView, context: Context) {
-        // Updates can be handled here (if needed)
-    }
-}
 
-struct UserCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Wrapping the UserCardViewPreview with the sample user
-        UserCardViewPreview(user: UserInfoViewModel(name: "Nhung",
-                                                    avatar: "https://avatars.githubusercontent.com/u/1?v=4",
-                                                    location: "Việt Nam",
-                                                    url: "https://avatars.githubusercontent.com/u/1?v=4"))
-        .frame(height: 140)
-        .padding(16)
-        .background(Color.black)
-    }
-}
