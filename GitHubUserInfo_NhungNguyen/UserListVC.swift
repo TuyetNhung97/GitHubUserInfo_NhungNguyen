@@ -103,13 +103,11 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
         let contentHeight = scrollView.contentSize.height
         let frameHeight = scrollView.frame.size.height
         
-        // Check if we are near the bottom of the table view
+        // Check if we are near the bottom of the table view for pagination
         if offsetY > contentHeight - frameHeight - 100 {
             if !userVM.users.value.isEmpty {
-                print("load more call")
                 userVM.fetchUserList()
             }
-            
         }
     }
     

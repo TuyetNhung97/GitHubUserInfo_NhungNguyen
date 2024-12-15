@@ -33,8 +33,6 @@ class UserListVMImpl: UserListVM {
     }
     
     func fetchUserList() {
-        // neu lan dau
-        // Check if already loading
         guard !isLoading else { return }
         
         isLoading = true
@@ -43,7 +41,6 @@ class UserListVMImpl: UserListVM {
             do {
                 // Fetch new users from the service
                 let newUsers = try await userService.fetchUsers(perPage: perPage, since: since)
-                print("debug user from api \(newUsers.debugDescription)")
                 // Store the new users in Core Data
                 try await coreDataHelper.storeUserList(newUsers)
                 
@@ -52,16 +49,12 @@ class UserListVMImpl: UserListVM {
                 
                 // Fetch the cached users from Core Data
                 let cachedUsers = try await self.coreDataHelper.fetchUserList()
-                print("debug cache user \(cachedUsers.count)")
                 // Map cached users to view models
                 let viewModels = cachedUsers.map { UserInfoViewModel(name: $0.nameLogin,
                                                                      avatar: $0.avatarUrl,
                                                                      url: $0.htmlUrl) }
                 
-                // Update UI on the main thread
-                DispatchQueue.main.async {
-                    self.users.value = viewModels
-                }
+                self.users.value = viewModels
             } catch {
                 // Handle errors
                 DispatchQueue.main.async {
@@ -105,12 +98,10 @@ class UserListVMImpl: UserListVM {
             let viewModels = cachedUsers.map { UserInfoViewModel(name: $0.nameLogin,
                                                                  avatar: $0.avatarUrl,
                                                                  url: $0.htmlUrl) }
+            // Update the 'since' value for pagination
+            self.since = cachedUsers.last?.id ?? self.since
             self.users.value = viewModels
-            // Update UI on the main thread
-//            DispatchQueue.main.async {
-//                
-//            }
-            
+
             // If no cached users, fetch from the service
             if cachedUsers.isEmpty {
                 fetchUserList()
