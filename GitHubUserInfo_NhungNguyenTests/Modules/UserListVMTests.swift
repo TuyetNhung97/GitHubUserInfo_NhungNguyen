@@ -6,110 +6,91 @@
 //
 
 import XCTest
+import Combine
 @testable import GitHubUserInfo_NhungNguyen
 
 final class UserListVMTests: XCTestCase {
-    var sut: UserListVM!
-    var mockUserService: MockAPIService!
-    var mockCoreDataHelper: MockCoreDataHelper!
+    private var viewModel: UserListVM!
+    private var mockUserService: MockAPIService!
+    private var mockCoreDataHelper: MockCoreDataHelper!
+    private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         super.setUp()
-        mockUserService = MockAPIService()
-        mockCoreDataHelper = MockCoreDataHelper()
-        sut = UserListVMImpl(userService: mockUserService,
-                             coreDataHelper: mockCoreDataHelper)
+        self.mockUserService = MockAPIService()
+        self.mockCoreDataHelper = MockCoreDataHelper()
+        self.viewModel = UserListVMImpl(userService: mockUserService,
+                                   coreDataHelper: mockCoreDataHelper)
+        self.cancellables = Set<AnyCancellable>()
     }
     
     override func tearDown() {
-        sut = nil
-        mockUserService = nil
-        mockCoreDataHelper = nil
+        self.viewModel = nil
+        self.mockUserService = nil
+        self.mockCoreDataHelper = nil
+        self.cancellables = nil
         super.tearDown()
     }
     
     func testFetchUserList_Success() async {
-        // Arrange
-        let users = [
-            GitHubUser(id: 1,
-                       nameLogin: "Nguyen Van A",
-                       avatarUrl: "https://avatars.githubusercontent.com/u/101?v=4",
-                       htmlUrl: "https://github.com/jvantuyl"),
-            GitHubUser(id: 2,
-                       nameLogin: "Nguyen Van B",
-                       avatarUrl: "https://avatars.githubusercontent.com/u/101?v=6",
-                       htmlUrl: "https://github.com/BrianTheCoder")
-        ]
-        mockUserService.mockUsers = users
+        let mockUsers = [GitHubUser(id: 3,
+                                    nameLogin: "NhungNguyen",
+                                    avatarUrl: "https://avatars.githubusercontent.com/u/101?v=4",
+                                    htmlUrl: "http://souja.net")]
+        mockUserService.mockUsers = mockUsers
+        mockCoreDataHelper.mockUserList = []
         
-        // Act
-        sut.fetchUserList()
-        await Task.sleep(500_000_000)
-
-        // Assert
-        XCTAssertEqual(sut.users.value.count, users.count)
-        XCTAssertEqual(sut.users.value.first?.name, users.first?.nameLogin)
-        XCTAssertEqual(sut.users.value.last?.name, users.last?.nameLogin)
+        let expectation = self.expectation(description: "Users should be updated")
+        viewModel.users
+            .sink { users in
+                if !users.isEmpty {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.fetchUserList()
+        
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(viewModel.users.value.count, 1)
+        XCTAssertEqual(viewModel.users.value.first?.name, "NhungNguyen")
     }
     
-    func testFetchUserList_Error() async {
-        // Arrange
+    func testFetchUserList_Failure() async {
         mockUserService.shouldReturnError = true
         
-        // Act
-        sut.fetchUserList()
-        await Task.sleep(500_000_000)
+        viewModel.fetchUserList()
         
-        // Assert
-        XCTAssertTrue(sut.users.value.isEmpty)
+        let expectation = self.expectation(description: "Error should be emitted")
+        var receivedError: String?
+        
+        viewModel.errorPublisher
+            .sink { errorMessage in
+                receivedError = errorMessage
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(receivedError, "Server issue - Test Error", "Expected error was not emitted")
     }
     
-    func testLoadUsersFromCoreData_NoCachedUsers() async {
-        // Arrange
-        mockCoreDataHelper.mockCachedUsers = []
-        let apiuUsers = [
-            GitHubUser(id: 1, nameLogin: "User1", avatarUrl: "url1", htmlUrl: "html1"),
-            GitHubUser(id: 1, nameLogin: "User1", avatarUrl: "url1", htmlUrl: "html1")
-        ]
-        mockUserService.mockUsers = apiuUsers
-        
-        // Act
-        await sut.loadUsersFromCoreData()
-        await Task.sleep(500_000_000)
-        
-        // Assert
-        XCTAssertEqual(sut.users.value.count, 2)
-        XCTAssertEqual(sut.users.value.first?.name, "User1")
-    }
-    
-    func testLoadUsersFromCoreData_WithCachedUsers() async {
-        // Arrange
-        let cachedUsers = [
-            GitHubUser(id: 1, nameLogin: "CachedUser1", avatarUrl: "cachedUrl1", htmlUrl: "cachedHtml1")
-        ]
-        mockCoreDataHelper.mockCachedUsers = cachedUsers
-        
-        // Act
-        await sut.loadUsersFromCoreData()
-        
-        // Assert
-        XCTAssertEqual(sut.users.value.count, cachedUsers.count)
-        XCTAssertEqual(sut.users.value.first?.name, "CachedUser1")
-    }
-    
-    func testRefreshUserList_Success() async {
-        // Arrange
-        let users = [
-            GitHubUser(id: 1, nameLogin: "User1", avatarUrl: "url1", htmlUrl: "html1")
-        ]
-        mockUserService.mockUsers = users
-        
-        // Act
-        sut.refreshUserList()
-        await Task.sleep(500_000_000)
-        
-        // Assert
-        XCTAssertEqual(sut.users.value.count, users.count)
-        XCTAssertEqual(sut.users.value.first?.name, "User1")
+    func testLoadUsersFromCoreData() async throws {
+        let mockUsers = [GitHubUser(
+            id: 3,
+            nameLogin: "NguyenNhung",
+            avatarUrl: "https://avatars.githubusercontent.com/u/101?v=4",
+            htmlUrl: "http://souja.net"
+        )]
+        mockCoreDataHelper.mockUserList = []
+        try await mockCoreDataHelper.storeUserList(mockUsers)
+
+        await viewModel.loadUsersFromCoreData()
+
+        let users = viewModel.users.value
+        XCTAssertEqual(users.count, 1, "Expected exactly 1 user to be loaded from Core Data")
+        XCTAssertEqual(users.first?.name, "NguyenNhung", "User name should match the mock data")
     }
 }

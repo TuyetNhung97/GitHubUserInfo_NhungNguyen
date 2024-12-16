@@ -114,7 +114,6 @@ class UserCardView: UIView {
     // MARK: - View Setup
     private func setupView() {
         
-        // Add subviews
         addSubview(containerView)
         containerView.addSubview(avatarBackgroundView)
         avatarBackgroundView.addSubview(avatarImageView)
@@ -126,52 +125,43 @@ class UserCardView: UIView {
         locationView.addSubview(locationImageView)
         locationView.addSubview(locationLabel)
         
-        // Constraints
         NSLayoutConstraint.activate([
-            // Constraints containerView
             containerView.topAnchor.constraint(equalTo: topAnchor),
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             
-            // Constraints avatarBackgroundView
             avatarBackgroundView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
             avatarBackgroundView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             avatarBackgroundView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
             avatarBackgroundView.widthAnchor.constraint(equalToConstant: 108),
             avatarBackgroundView.heightAnchor.constraint(equalToConstant: 108),
             
-            // Constraints avatarImageView
             avatarImageView.centerYAnchor.constraint(equalTo: avatarBackgroundView.centerYAnchor),
             avatarImageView.centerXAnchor.constraint(equalTo: avatarBackgroundView.centerXAnchor),
             avatarImageView.widthAnchor.constraint(equalToConstant: 100),
             avatarImageView.heightAnchor.constraint(equalToConstant: 100),
             
-            // Constraints nameLabel
             nameLabel.topAnchor.constraint(equalTo: avatarBackgroundView.topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: avatarBackgroundView.trailingAnchor, constant: 16),
             nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
             
-            // Constraints lineView
             lineView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 12),
             lineView.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             lineView.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
             lineView.heightAnchor.constraint(equalToConstant: 0.5),
             
-            // Constraints verticalSV
             verticalSV.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 8),
             verticalSV.leadingAnchor.constraint(equalTo: lineView.leadingAnchor),
             verticalSV.trailingAnchor.constraint(equalTo: lineView.trailingAnchor),
             verticalSV.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -16),
             
-            // Constraints locationImageView
             locationImageView.topAnchor.constraint(equalTo: locationView.topAnchor),
             locationImageView.leadingAnchor.constraint(equalTo: locationView.leadingAnchor),
             locationImageView.bottomAnchor.constraint(equalTo: locationView.bottomAnchor),
             locationImageView.widthAnchor.constraint(equalToConstant: 24),
             locationImageView.heightAnchor.constraint(equalToConstant: 24),
             
-            // Constraints locationLabel
             locationLabel.topAnchor.constraint(equalTo: locationImageView.topAnchor),
             locationLabel.leadingAnchor.constraint(equalTo: locationImageView.trailingAnchor),
             locationLabel.trailingAnchor.constraint(equalTo: locationView.trailingAnchor, constant: -16),

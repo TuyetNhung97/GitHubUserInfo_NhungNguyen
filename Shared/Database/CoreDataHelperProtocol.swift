@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CoreDataHelper {
-    func fetchUserList() async throws -> [GitHubUser]
+    func fetchUserList() async throws -> [UserEntity]
     func storeUserList(_ users: [GitHubUser]) async throws
     func deleteAllUserList() async throws
 }

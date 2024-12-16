@@ -10,62 +10,64 @@ import Combine
 
 class UserDetailVC: UIViewController {
     
-    private var userDetailVM: UserDetailVM!
+    // MARK: - Properties
+    private var viewModel: UserDetailVM
     private var cancellables = Set<AnyCancellable>()
     
-    init(userDetailVM: UserDetailVM) {
+    // MARK: - Initializer
+    init(viewModel: UserDetailVM) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        self.userDetailVM = userDetailVM
     }
     
     required init?(coder: NSCoder) {
-        fatalError()
+        fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var userDetailScrollView: UIScrollView = {
-       let scrollView = UIScrollView()
+    // MARK: - UI Components
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         return scrollView
     }()
     
-    private lazy var scrollContainerView: UIView = {
-       let view = UIView()
+    private lazy var scrollContentView: UIView = {
+        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private lazy var userDetailCard: UserCardView = {
-       let view = UserCardView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private lazy var userCardView: UserCardView = {
+        let card = UserCardView()
+        card.translatesAutoresizingMaskIntoConstraints = false
+        return card
     }()
     
     private lazy var followStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = .equalSpacing
-        stackView.axis = .horizontal
-        return stackView
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.distribution = .equalSpacing
+        return stack
     }()
     
     private lazy var followerView: FollowView = {
-       let view = FollowView()
+        let view = FollowView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(title: "Follower", icon: "ic_follower")
+        view.configure(title: "Followers", icon: "ic_follower")
         return view
     }()
     
     private lazy var followingView: FollowView = {
-       let view = FollowView()
+        let view = FollowView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.configure(title: "Following", icon: "ic_following")
         return view
     }()
     
     private lazy var blogTitleLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 18)
         label.text = "Blog"
@@ -74,123 +76,142 @@ class UserDetailVC: UIViewController {
     
     private lazy var blogDetailLabel: UILabel = {
         let label = UILabel()
-         label.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14)
         label.textColor = .gray
-         return label
+        label.numberOfLines = 0
+        return label
     }()
-        
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
-        setupVM()
+        setupUI()
+        bindViewModel()
+        fetchUserDetail()
     }
     
-    func setupView() {
+    // MARK: - UI Setup
+    private func setupUI() {
+        view.backgroundColor = .systemBackground
         setupNavigationBar()
-        addSubView()
+        setupScrollView()
+    }
+    
+    private func setupNavigationBar() {
+        title = "User Details"
+        navigationItem.leftBarButtonItem = createBarButtonItem(imageName: "ic_back", action: #selector(handleBackAction))
+    }
+    
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(scrollContentView)
         
+        scrollContentView.addSubview(userCardView)
+        scrollContentView.addSubview(followStackView)
+        scrollContentView.addSubview(blogTitleLabel)
+        scrollContentView.addSubview(blogDetailLabel)
         
-        let scrollContentGuide = userDetailScrollView.contentLayoutGuide
-        let scrollFrameGuide = userDetailScrollView.frameLayoutGuide
+        followStackView.addArrangedSubview(createSpacerView())
+        followStackView.addArrangedSubview(followerView)
+        followStackView.addArrangedSubview(followingView)
+        followStackView.addArrangedSubview(createSpacerView())
         
         NSLayoutConstraint.activate([
-            userDetailScrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            userDetailScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            userDetailScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            userDetailScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            scrollContainerView.topAnchor.constraint(equalTo: scrollContentGuide.topAnchor),
-            scrollContainerView.leadingAnchor.constraint(equalTo: scrollContentGuide.leadingAnchor),
-            scrollContainerView.trailingAnchor.constraint(equalTo: scrollContentGuide.trailingAnchor),
-            scrollContainerView.bottomAnchor.constraint(equalTo: scrollContentGuide.bottomAnchor),
+            scrollContentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            scrollContentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            scrollContentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            scrollContentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             
-            scrollContainerView.leadingAnchor.constraint(equalTo: scrollFrameGuide.leadingAnchor),
-            scrollContainerView.trailingAnchor.constraint(equalTo: scrollFrameGuide.trailingAnchor),
-                        
-            userDetailCard.topAnchor.constraint(equalTo: scrollContainerView.topAnchor, constant: 16),
-            userDetailCard.leadingAnchor.constraint(equalTo: scrollContainerView.leadingAnchor),
-            userDetailCard.trailingAnchor.constraint(equalTo: scrollContainerView.trailingAnchor),
+            userCardView.topAnchor.constraint(equalTo: scrollContentView.topAnchor, constant: 16),
+            userCardView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
+            userCardView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
             
-            followStackView.topAnchor.constraint(equalTo: userDetailCard.bottomAnchor, constant: 16),
-            followStackView.leadingAnchor.constraint(equalTo: scrollContainerView.leadingAnchor),
-            followStackView.trailingAnchor.constraint(equalTo: scrollContainerView.trailingAnchor),
-            followStackView.bottomAnchor.constraint(equalTo: scrollContainerView.bottomAnchor),
+            followStackView.topAnchor.constraint(equalTo: userCardView.bottomAnchor, constant: 16),
+            followStackView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 16),
+            followStackView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -16),
             
             blogTitleLabel.topAnchor.constraint(equalTo: followStackView.bottomAnchor, constant: 16),
-            blogTitleLabel.leadingAnchor.constraint(equalTo: scrollContainerView.leadingAnchor, constant: 16),
-            blogTitleLabel.trailingAnchor.constraint(equalTo: scrollContainerView.trailingAnchor, constant: -16),
+            blogTitleLabel.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 16),
+            blogTitleLabel.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -16),
             
-            blogDetailLabel.topAnchor.constraint(equalTo: blogTitleLabel.bottomAnchor, constant: 12),
-            blogDetailLabel.leadingAnchor.constraint(equalTo: scrollContainerView.leadingAnchor, constant: 16),
-            blogDetailLabel.trailingAnchor.constraint(equalTo: scrollContainerView.trailingAnchor, constant: -16),
-            blogDetailLabel.bottomAnchor.constraint(greaterThanOrEqualTo: scrollContainerView.bottomAnchor, constant: -16),
+            blogDetailLabel.topAnchor.constraint(equalTo: blogTitleLabel.bottomAnchor, constant: 8),
+            blogDetailLabel.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 16),
+            blogDetailLabel.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -16),
+            blogDetailLabel.bottomAnchor.constraint(lessThanOrEqualTo: scrollContentView.bottomAnchor, constant: -16)
         ])
     }
     
-    func setupNavigationBar() {
-        title = "User details"
-        let icBack = UIImage(named: "ic_back")
-        
-        let button = UIButton(type: .custom)
-        button.setImage(icBack, for: .normal)
-        button.frame = CGRect(x: 16.0, y: 0.0, width: 20, height: 20)
-        button.addTarget(self, action: #selector(handleActionBack), for: .touchUpInside)
-        
-        let barButtonItem = UIBarButtonItem(customView: button)
-        
-        self.navigationItem.leftBarButtonItem = barButtonItem
-    }
-    
-    func addSubView() {
-        view.backgroundColor = .white
-        view.addSubview(userDetailScrollView)
-        userDetailScrollView.addSubview(scrollContainerView)
-        scrollContainerView.addSubview(userDetailCard)
-        scrollContainerView.addSubview(followStackView)
-        
-        followStackView.addArrangedSubview(createEmptyView())
-        followStackView.addArrangedSubview(followerView)
-        followStackView.addArrangedSubview(followingView)
-        followStackView.addArrangedSubview(createEmptyView())
-        
-        scrollContainerView.addSubview(blogTitleLabel)
-        scrollContainerView.addSubview(blogDetailLabel)
-    }
-    
-    func createEmptyView() -> UIView {
+    private func createSpacerView() -> UIView {
         let spacer = UIView()
         spacer.translatesAutoresizingMaskIntoConstraints = false
         spacer.widthAnchor.constraint(equalToConstant: 1).isActive = true
         return spacer
     }
     
-    func setupVM() {
-        self.userDetailVM.userDetail
+    private func createBarButtonItem(imageName: String, action: Selector) -> UIBarButtonItem {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: imageName), for: .normal)
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return UIBarButtonItem(customView: button)
+    }
+    
+    // MARK: - ViewModel Binding
+    private func bindViewModel() {
+        viewModel.userDetail
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] dataUserdetail in
-                guard let self = self, let dataUserdetail else { return }
-                self.configure(with: dataUserdetail)
+            .sink { [weak self] userDetail in
+                guard let userDetail else { return }
+                self?.configureView(with: userDetail)
             }
             .store(in: &cancellables)
-        self.userDetailVM.fetchUserDetail()
+        
+        viewModel.errorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errorMessage in
+                self?.showErrorAlert(message: errorMessage)
+            }
+            .store(in: &cancellables)
     }
     
-    func configure(with user: UserDetailViewModel) {
-        userDetailCard.configure(with: user.userGeneralInfo)
+    private func fetchUserDetail() {
+        viewModel.fetchUserDetail()
+    }
+    
+    // MARK: - Configuration
+    private func configureView(with user: UserDetailViewModel) {
+        userCardView.configure(with: user.userGeneralInfo)
         followerView.setFollowNumber(numberString: user.followerNumber.getFormattedString())
         followingView.setFollowNumber(numberString: user.followingNumber.getFormattedString())
-        blogDetailLabel.text = user.blogUrl
+        blogDetailLabel.text = user.blogUrl.isEmpty ? "No Blog URL" : user.blogUrl
     }
     
-    @objc func handleActionBack() {
-        self.navigationController?.popViewController(animated: true)
+    // MARK: - Error Handling
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { [weak self] _ in
+            self?.actionRetryFetchUserDetail()
+        }))
+        alert.addAction(UIAlertAction(title: "Ok", style: .default))
+        present(alert, animated: true)
+    }
+    
+    // MARK: - Actions
+    @objc private func handleBackAction() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func actionRetryFetchUserDetail() {
+        viewModel.fetchUserDetail()
     }
 }
 
-extension UserDetailVC: UIScrollViewDelegate {
-    
-}
 
 struct UserDetailViewModel {
     var userGeneralInfo: UserInfoViewModel

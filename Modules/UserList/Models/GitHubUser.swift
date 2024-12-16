@@ -12,7 +12,7 @@ struct GitHubUser: Codable {
     let nameLogin: String
     let avatarUrl: String
     let htmlUrl: String
-    // Mapping giữa tên khóa JSON và tên thuộc tính trong struct
+    
     enum CodingKeys: String, CodingKey {
         case id
         case nameLogin = "login"

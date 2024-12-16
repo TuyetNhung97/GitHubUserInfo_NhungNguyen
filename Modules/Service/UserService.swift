@@ -18,7 +18,7 @@ class UserSeviceIml: UserService {
     init(apiService: NetworkService) {
         self.apiService = apiService
     }
-
+    
     func fetchUsers(perPage: Int, since: Int) async throws -> [GitHubUser] {
         return try await apiService.request(GitHubEndpoint.fetchUsers(perPage: perPage, since: since))
     }

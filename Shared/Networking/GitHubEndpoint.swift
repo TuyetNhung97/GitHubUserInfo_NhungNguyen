@@ -77,23 +77,19 @@ enum GitHubEndpoint: Endpoint {
     }
     
     func asURLRequest() throws -> URLRequest {
-        // Build the full URL
         guard var components = URLComponents(string: baseURL + path) else {
             throw NetworkError.invalidURL
         }
         
-        // Add query items if available
         components.queryItems = parameters
         
         guard let url = components.url else {
             throw NetworkError.invalidURL
         }
         
-        // Configure the request
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         
-        // Add headers
         headers?.forEach { request.setValue($1, forHTTPHeaderField: $0) }
         print(request)
         return request

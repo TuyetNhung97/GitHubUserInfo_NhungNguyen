@@ -9,60 +9,82 @@ import XCTest
 import Combine
 @testable import GitHubUserInfo_NhungNguyen
 
-class UserDetailViewModelTests: XCTestCase {
-    var sut: UserDetailVM!
-    var mockUserService: MockAPIService!
-    var loginUsername: String = ""
+final class UserDetailViewModelTests: XCTestCase {
     
+    private var viewModel: UserDetailVM!
+    private var mockUserService: MockAPIService!
+    private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         super.setUp()
-        self.mockUserService = MockAPIService()
-        self.loginUsername = "NhungNguyen"
-        self.sut = UserDetailVMImpl(userService: self.mockUserService,
-                                    loginUsername: loginUsername)
-        self.cancellables = []
+        mockUserService = MockAPIService()
+        viewModel = UserDetailVMImpl(userService: mockUserService, loginUsername: "NhungNguyen")
+        cancellables = Set<AnyCancellable>()
     }
     
     override func tearDown() {
-        self.mockUserService = nil
-        self.sut = nil
-        self.loginUsername = ""
-        self.cancellables = nil
+        viewModel = nil
+        mockUserService = nil
+        cancellables = nil
         super.tearDown()
     }
     
-    // Test: Fetch User Detail Successfully
-    func testFetchUserDetail_Success() {
-        mockUserService.mockUserDetail = GitHubUserDetail(
-            nameLogin: "JohnDoe",
-            avatarUrl: "https://example.com/avatar.jpg",
-            location: "San Francisco",
-            followerNumber: 150,
-            followingNumber: 20,
-            blogUrl: "https://johndoe.com"
+    func testFetchUserDetail_Success() async {
+        let mockUserDetail = GitHubUserDetail(
+            id: 1,
+            nameLogin: "NhungNguyen",
+            avatarUrl: "https://avatars.githubusercontent.com/u/101?v=4",
+            location: "Viet Nam",
+            followerNumber: 120,
+            followingNumber: 5,
+            blogUrl: "http://souja.net"
         )
+        mockUserService.mockUserDetail = mockUserDetail
         
-        // Fetch user details
-        Task {
-            await sut.fetchUserDetail()
-        }
+        viewModel.fetchUserDetail()
         
-        XCTAssertEqual(sut.userGeneralInfo.name, mockUserService.mockUserDetail?.nameLogin)
-        XCTAssertEqual(sut.userGeneralInfo.location, mockUserService.mockUserDetail?.location)
-        XCTAssertEqual(sut.followerNumber.getFormattedString(), "100+")
-        XCTAssertEqual(sut.followingNumber.getFormattedString(), "10+")
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+        
+        let userDetail = viewModel.userDetail.value
+        XCTAssertNotNil(userDetail, "User detail should not be nil")
+        XCTAssertEqual(userDetail?.userGeneralInfo.name, "NhungNguyen")
+        XCTAssertEqual(userDetail?.followerNumber.getFormattedString(), "100+")
+        XCTAssertEqual(userDetail?.followingNumber.getFormattedString(), "5")
     }
     
-    // Test: Fetch User Detail with Error
-    func testFetchUserDetail_Error() {
+    func testFetchUserDetail_Failure() async {
         mockUserService.shouldReturnError = true
         
-        // Test that calling fetchUserDetail throws an error
-        await XCTAssertThrowsError(try await sut.fetchUserDetail()) { error in
-            // You can add more assertions on the error if needed
-            XCTAssertEqual((error as? NSError)?.code, 500, "Expected network error code 500")
-            XCTAssertEqual((error as? NSError)?.localizedDescription, "Network error", "Expected network error description")
+        viewModel.fetchUserDetail()
+        
+        let expectation = self.expectation(description: "Error should be emitted")
+        var receivedError: String?
+        
+        viewModel.errorPublisher
+            .sink { errorMessage in
+                receivedError = errorMessage
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(receivedError, "Server issue - Test Error", "Expected error was not emitted")
+    }
+    
+    
+    func testFollowTypeFormatting() {
+        let testCases: [(FollowType, String)] = [
+            (.follower(120), "100+"),
+            (.follower(50), "50"),
+            (.following(5), "5"),
+            (.following(15), "10+")
+        ]
+        
+        for (followType, expectedString) in testCases {
+            XCTAssertEqual(followType.getFormattedString(), expectedString, "FollowType formatting is incorrect")
         }
     }
 }
+
+

@@ -19,7 +19,7 @@ class UserListItemCell: UITableViewCell {
     private var userInfo: UserInfoViewModel?
     static var reuseIdentifier = "UserListItemCell"
     
-    // MARK: - Init
+    // MARK: - Initializer
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none

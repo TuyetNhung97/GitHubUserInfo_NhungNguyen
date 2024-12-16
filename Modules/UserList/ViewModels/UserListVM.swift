@@ -9,15 +9,17 @@ import Foundation
 import Combine
 
 protocol UserListVM {
-    var users: CurrentValueSubject<[UserInfoViewModel], Never> { get set }
+    var users: CurrentValueSubject<[UserInfoViewModel], Never> { get }
     var perPage: Int { get }
     var since: Int { get set }
+    var errorPublisher: PassthroughSubject<String, Never> { get }
     func fetchUserList()
     func refreshUserList()
     func loadUsersFromCoreData() async
 }
 
 class UserListVMImpl: UserListVM {
+    // MARK: - Properties
     @Published var users = CurrentValueSubject<[UserInfoViewModel], Never>([])
     let perPage = 20
     var since = 0
@@ -26,108 +28,94 @@ class UserListVMImpl: UserListVM {
     private var cancellables = Set<AnyCancellable>()
     private let userService: UserService
     private let coreDataHelper: CoreDataHelper
+    var errorPublisher = PassthroughSubject<String, Never>()
     
+    // MARK: - Initializer
     init(userService: UserService, coreDataHelper: CoreDataHelper) {
         self.userService = userService
         self.coreDataHelper = coreDataHelper
     }
     
+    // MARK: - Public Methods
     func fetchUserList() {
+        // Prevent multiple concurrent API requests by checking if a request is already in progress.
         guard !isLoading else { return }
-        
         isLoading = true
-        Task { [weak self] in
-            guard let self = self else { return }
+        
+        Task {
             do {
-                // Fetch new users from the service
                 let newUsers = try await userService.fetchUsers(perPage: perPage, since: since)
-                // Store the new users in Core Data
                 try await coreDataHelper.storeUserList(newUsers)
-                
-                // Update the 'since' value for pagination
-                self.since = newUsers.last?.id ?? self.since
-                
-                // Fetch the cached users from Core Data
-                let cachedUsers = try await self.coreDataHelper.fetchUserList()
-                // Map cached users to view models
-                let viewModels = cachedUsers.map { UserInfoViewModel(name: $0.nameLogin,
-                                                                     avatar: $0.avatarUrl,
-                                                                     url: $0.htmlUrl) }
-                
-                self.users.value = viewModels
+                since = newUsers.last?.id ?? since
+                await updateViewModelsFromCoreData()
             } catch {
-                // Handle errors
-                DispatchQueue.main.async {
-                    self.handleError(error)
-                }
+                handleError(error)
             }
             
-            // Reset isLoading flag on the main thread
-            DispatchQueue.main.async {
-                self.isLoading = false
-            }
+            isLoading = false
         }
     }
     
     func refreshUserList() {
-        Task { [weak self] in
-            guard let self = self else { return }
+        Task {
             do {
-                // Delete all users in Core Data
                 try await coreDataHelper.deleteAllUserList()
-                
-                // Reset 'since' value
-                self.since = 0
-                
-                // Fetch the new user list
+                since = 0
                 fetchUserList()
             } catch {
-                DispatchQueue.main.async {
-                    self.handleError(error)
-                }
+                handleError(error)
             }
         }
     }
     
     func loadUsersFromCoreData() async {
-        do {
-            // Fetch cached users
-            let cachedUsers = try await coreDataHelper.fetchUserList()
-            
-            // Map cached users to view models
-            let viewModels = cachedUsers.map { UserInfoViewModel(name: $0.nameLogin,
-                                                                 avatar: $0.avatarUrl,
-                                                                 url: $0.htmlUrl) }
-            // Update the 'since' value for pagination
-            self.since = cachedUsers.last?.id ?? self.since
-            self.users.value = viewModels
-
-            // If no cached users, fetch from the service
-            if cachedUsers.isEmpty {
-                fetchUserList()
-            }
-        } catch {
-            // Handle errors if any
-            DispatchQueue.main.async {
-                self.handleError(error)
-            }
+        await updateViewModelsFromCoreData()
+        
+        if users.value.isEmpty {
+            fetchUserList()
         }
     }
     
+    // MARK: - Private Methods
+    /// Updates the users view model from cached Core Data users.
+    private func updateViewModelsFromCoreData() async {
+        do {
+            let cachedUsers = try await coreDataHelper.fetchUserList()
+            since = Int(cachedUsers.last?.id ?? Int64(since))
+            users.value = cachedUsers.mapToViewModels()
+        } catch {
+            handleError(error)
+        }
+    }
+    
+    /// Handles errors and provides appropriate logs or feedback.
     private func handleError(_ error: Error) {
+        var errorMessage = "An error occurred"
+        
         if let networkError = error as? NetworkError {
             switch networkError {
             case .noInternet:
-                print("No internet connection")
+                errorMessage = "No internet connection"
             case .timeout:
-                print("Request timed out")
+                errorMessage = "Request timed out"
             case .serverError(let message):
-                print("Server error: \(message)")
+                errorMessage = "Server issue - \(message)"
             default:
-                print("Unknown error")
+                errorMessage = "Unknown network issue"
             }
         } else {
-            print("Error: \(error.localizedDescription)")
+            errorMessage = error.localizedDescription
         }
+        
+        // Send the error message to the subscribers
+        errorPublisher.send(errorMessage)
     }
 }
+
+// MARK: - Extensions
+private extension Array where Element == UserEntity {
+    func mapToViewModels() -> [UserInfoViewModel] {
+        return self.map { UserInfoViewModel(name: $0.nameLogin, avatar: $0.avatarUrl, url: $0.htmlUrl) }
+    }
+}
+
